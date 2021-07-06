@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 
 namespace WpfDesktopApplicationv2.Commands
 {
-    class ButtonCommand
+    class ButtonCommand:ICommand
     {
-        private readonly Action _handler;
-        private readonly bool _isEnabled;
+        private Action _handler;
+        private bool _isEnabled;
 
         /// <summary>
         /// Constructor for Button Command. 
@@ -17,6 +18,19 @@ namespace WpfDesktopApplicationv2.Commands
         {
             _handler = handler;
             _isEnabled = true;
+        }
+
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set
+            {
+                if (value != _isEnabled)
+                {
+                    _isEnabled = value;
+                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
         }
 
         public event EventHandler CanExecuteChanged;

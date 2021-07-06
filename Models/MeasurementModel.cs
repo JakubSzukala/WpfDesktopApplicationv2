@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WpfDesktopApplicationv2.Models
 {
-    class MeasurementModel
+    public class MeasurementModel
     {
         public string Name { set; get; }
         public string Data { set; get; }

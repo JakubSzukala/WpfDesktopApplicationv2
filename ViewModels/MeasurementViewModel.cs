@@ -6,7 +6,7 @@ using WpfDesktopApplicationv2.Models;
 
 namespace WpfDesktopApplicationv2.ViewModels
 {
-    class MeasurementViewModel : INotifyPropertyChanged
+    public class MeasurementViewModel : INotifyPropertyChanged
     {
         private string _Name;
 

@@ -9,14 +9,17 @@ using WpfDesktopApplicationv2.ViewModels;
 
 namespace WpfDesktopApplicationv2.Models
 {
-    class DataConverterModel
+    /// <summary>
+    /// Middleman / mediator class for communication with server, that delivers data in necessary formats. 
+    /// </summary>
+    class ServerMediatorModel
     {
-        private readonly ServerIoTmock _server;
+        private ServerIoTmock _server;
         private List<MeasurementViewModel> measurementsRaw;
         private List<DataPoint> DataPoints;
 
 
-        public DataConverterModel()
+        public ServerMediatorModel(string ip)
         {
             _server = new ServerIoTmock();
             measurementsRaw = new List<MeasurementViewModel>();
@@ -28,15 +31,15 @@ namespace WpfDesktopApplicationv2.Models
         /// Get raw data from server, transform it into dictionary of data points with names of measurements as keys.
         /// In this form data is ready to be broadcasted on used by charts easily.
         /// </summary>
-        /// <param name="SamplingtTime">Sampling time added to a data point.</param>
+        /// <param name="TimeStamp">Sampling time added to a data point.</param>
         /// <returns>It returns dictionary of string (key) and data point (value) pairs</returns>
-        public Dictionary<string, DataPoint> RequestDataPointsFromServer(float SamplingtTime)
+        public Dictionary<string, DataPoint> RequestDataPointsFromServer(float TimeStamp)
         {
             // get raw data into measurementsRaw list 
             GetRawData();
 
             // transform it to dictionary of data points from oxyplot identified by measurement name
-            return GetAsDataPoints(SamplingtTime);
+            return GetAsDataPoints(TimeStamp);
         }
 
 
@@ -82,16 +85,16 @@ namespace WpfDesktopApplicationv2.Models
         /// <summary>
         /// Get data already formatted for displaying on the chart. Values can be identified by key (their name).
         /// </summary>
-        /// <param name="SamplingTime">sampling time that will be added to a data point.</param>
+        /// <param name="TimeStamp">sampling time that will be added to a data point.</param>
         /// <returns>It returns dictionary of string (key) and data point (value) pairs.</returns>
-        private Dictionary<string, DataPoint> GetAsDataPoints(float SamplingTime)
+        private Dictionary<string, DataPoint> GetAsDataPoints(float TimeStamp)
         {
             if(measurementsRaw.Count > 0)
             {
                 Dictionary<string, DataPoint> temp = new Dictionary<string, DataPoint>();
                 foreach(var m in measurementsRaw)
                 {
-                    temp.Add(m.Name, new DataPoint(SamplingTime, float.Parse(m.Data, CultureInfo.InvariantCulture)));
+                    temp.Add(m.Name, new DataPoint(TimeStamp, float.Parse(m.Data, CultureInfo.InvariantCulture)));
                 }
                 return temp;
             }

@@ -17,7 +17,7 @@ namespace WpfDesktopApplicationv2.ViewModels
         public PlotModel DataPlotModel { get; set; }
 
         // fields
-        private string _identifier;
+        public readonly string Identifier;
         BroadcastPointsStore _broadcast;
 
         // events
@@ -26,10 +26,10 @@ namespace WpfDesktopApplicationv2.ViewModels
         public DataPlotViewModel(string identifier, LinearAxis axis, BroadcastPointsStore broadcast)
         {
             // assign identifier
-            _identifier = identifier;
+            Identifier = identifier;
 
             // initialize plot on the basis of this identifier
-            DataPlotModel = new PlotModel() { Title = _identifier };
+            DataPlotModel = new PlotModel() { Title = Identifier };
             DataPlotModel.Axes.Add(axis);
             DataPlotModel.Axes.Add(new LinearAxis()
             {
@@ -42,7 +42,7 @@ namespace WpfDesktopApplicationv2.ViewModels
             });
 
             // add empty series for now
-            DataPlotModel.Series.Add(new LineSeries() { Title = _identifier + " data series", Color = OxyColor.Parse("#FFFF0000") });
+            DataPlotModel.Series.Add(new LineSeries() { Title = Identifier + " data series", Color = OxyColor.Parse("#FFFF0000") });
 
             // initialize broadcast on which plot will receive dictionary with points
             _broadcast = broadcast;
@@ -53,15 +53,21 @@ namespace WpfDesktopApplicationv2.ViewModels
 
         public void Update(object sender, Dictionary<string, DataPoint> dictionary)// object sender, event args
         {
-            Debug.WriteLine("Updating a plot...");
-            Debug.WriteLine("Identifier of this plot is: " + _identifier);
-            Debug.WriteLine("Point is: " + PickMeasurement(dictionary));
-
-            LineSeries lineSeries = DataPlotModel.Series[0] as LineSeries;
-            lineSeries.Points.Add(PickMeasurement(dictionary));
+            // check if series exists and can be reffered
+            try
+            {
+                LineSeries lineSeries = DataPlotModel.Series[0] as LineSeries;
+                lineSeries.Points.Add(PickMeasurement(dictionary));
+            }
+            // if not create one
+            catch
+            {
+                DataPlotModel.Series.Add(new LineSeries() { Title = Identifier + " data series", Color = OxyColor.Parse("#FFFF0000") });
+                LineSeries lineSeries = DataPlotModel.Series[0] as LineSeries;
+                lineSeries.Points.Add(PickMeasurement(dictionary));
+            }
 
             DataPlotModel.InvalidatePlot(true);
-            OnPropertyChanged("DataPlotModel"); // ? 
         }
 
         /// <summary>
@@ -72,12 +78,18 @@ namespace WpfDesktopApplicationv2.ViewModels
         {
             foreach(var m in dictionary)
             {
-                if(m.Key == _identifier)
+                if(m.Key == Identifier)
                 {
                     return m.Value;
                 }
             }
             return new DataPoint(0, 0);
+        }
+
+        public void ResetChart()
+        {
+            DataPlotModel.Series.Clear();
+            DataPlotModel.InvalidatePlot(true);
         }
 
         public void OnPropertyChanged(string name)
