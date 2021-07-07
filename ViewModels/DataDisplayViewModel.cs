@@ -17,7 +17,7 @@ namespace WpfDesktopApplicationv2.ViewModels
     class DataDisplayViewModel:INotifyPropertyChanged
     {
         //properties
-        public ObservableCollection<MeasurementViewModel> MeasurementsVM { get; set; } // src of problems? Will observable collection trigger?
+        public List<MeasurementViewModel> MeasurementsVM { get; set; } // src of problems? Will observable collection trigger?
         
         //public DataPlotViewModel ActivePlot { get; set; }
 
@@ -119,7 +119,7 @@ namespace WpfDesktopApplicationv2.ViewModels
 
         // Stores
         private BroadcastPointsStore broadcastPointsStore;
-        private BroadcastMeasurementsCollection broadcastMeasurementsCollection;
+        private BroadcastMeasurementsList broadcastMeasurementsCollection;
 
         // timer
         private Timer RequestTimer;
@@ -142,7 +142,7 @@ namespace WpfDesktopApplicationv2.ViewModels
 
             //Store initialization
             broadcastPointsStore = new BroadcastPointsStore();
-            broadcastMeasurementsCollection = new BroadcastMeasurementsCollection();
+            broadcastMeasurementsCollection = new BroadcastMeasurementsList();
 
             // charts initialization
             _charts = new List<DataPlotViewModel>();

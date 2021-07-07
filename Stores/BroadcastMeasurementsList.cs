@@ -6,11 +6,11 @@ using WpfDesktopApplicationv2.ViewModels;
 
 namespace WpfDesktopApplicationv2.Stores
 {
-    public class BroadcastMeasurementsCollection
+    public class BroadcastMeasurementsList
     {
-        public event EventHandler<ObservableCollection<MeasurementViewModel>> CollectionBroadcasted;
+        public event EventHandler<List<MeasurementViewModel>> CollectionBroadcasted;
 
-        public void OnCollectionBroadcasted(ObservableCollection<MeasurementViewModel> collection)
+        public void OnCollectionBroadcasted(List<MeasurementViewModel> collection)
         {
             CollectionBroadcasted?.Invoke(this, collection);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using WpfDesktopApplicationv2.Stores;
@@ -32,13 +33,13 @@ namespace WpfDesktopApplicationv2.ViewModels
         }
 
         // fields
-        private BroadcastMeasurementsCollection _publisher;
+        private BroadcastMeasurementsList _publisher;
 
         /// <summary>
         /// Constructor initializes a mediator and assigns event handler that will udpate a list view collection 
         /// </summary>
         /// <param name="collection"></param>
-        public DataListViewModel(BroadcastMeasurementsCollection collection)
+        public DataListViewModel(BroadcastMeasurementsList collection)
         {
             _measurementsListView = new ObservableCollection<MeasurementViewModel>();
             _publisher = collection;
@@ -50,9 +51,9 @@ namespace WpfDesktopApplicationv2.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="newMeasurements">New updated measurements</param>
-        private void UpdateList(object sender, ObservableCollection<MeasurementViewModel> newMeasurements)
+        private void UpdateList(object sender, List<MeasurementViewModel> newMeasurements)
         {
-            DataListMeasurements = newMeasurements;
+            DataListMeasurements = new ObservableCollection<MeasurementViewModel>(newMeasurements);
         }
 
         /// <summary>

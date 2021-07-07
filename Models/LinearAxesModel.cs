@@ -65,6 +65,7 @@ namespace WpfDesktopApplicationv2.Models
                 Unit = "°",
                 Title = "Pitch"
             };
+
             Yaw = new LinearAxis()
             {
                 Position = AxisPosition.Left,

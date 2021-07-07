@@ -15,14 +15,15 @@ namespace WpfDesktopApplicationv2.Models
     class ServerMediatorModel
     {
         private ServerIoTmock _server;
-        private List<MeasurementViewModel> measurementsRaw;
+        private List<MeasurementViewModel> measurementsRaw1;
+        private List<MeasurementViewModel> measurementsRaw2;
         private List<DataPoint> DataPoints;
 
 
         public ServerMediatorModel(string ip)
         {
             _server = new ServerIoTmock();
-            measurementsRaw = new List<MeasurementViewModel>();
+            measurementsRaw1 = new List<MeasurementViewModel>();
             DataPoints = new List<DataPoint>();
         }
 
@@ -36,7 +37,7 @@ namespace WpfDesktopApplicationv2.Models
         public Dictionary<string, DataPoint> RequestDataPointsFromServer(float TimeStamp)
         {
             // get raw data into measurementsRaw list 
-            GetRawData();
+            measurementsRaw1 = GetRawData();
 
             // transform it to dictionary of data points from oxyplot identified by measurement name
             return GetAsDataPoints(TimeStamp);
@@ -47,10 +48,10 @@ namespace WpfDesktopApplicationv2.Models
         /// Get raw data from a server and prepare it for some general purpose use or to use in list view.
         /// </summary>
         /// <returns>Returns observable collection of Measurement View Models for general purpose. </returns>
-        public ObservableCollection<MeasurementViewModel> RequestViewModelsFromServer()
+        public List<MeasurementViewModel> RequestViewModelsFromServer()
         {
             // get raw data into measurementsRaw list 
-            GetRawData();
+            measurementsRaw2 = GetRawData();
 
             // transform it to observable collection of viewmodels
             return GetAsMeasurementViewModels();
@@ -58,27 +59,20 @@ namespace WpfDesktopApplicationv2.Models
 
 
         /// <summary>
-        /// Gets raw data from a server for further formatting. Updates measurementsRaw List.
+        /// Gets data from server in form of JArray and processes it into a List of VMs
         /// </summary>
-        private void GetRawData()
+        /// <returns></returns>
+        private List<MeasurementViewModel> GetRawData()
         {
             JArray measurementsJson = _server.getMeasurements();
+            List<MeasurementViewModel> temp = new List<MeasurementViewModel>();
             List<MeasurementModel> measurementsModels = measurementsJson.ToObject<List<MeasurementModel>>();
-
-            if (measurementsRaw.Count < measurementsModels.Count)
+            
+            foreach (var m in measurementsModels)
             {
-                foreach (var m in measurementsModels)
-                {
-                    measurementsRaw.Add(new MeasurementViewModel(m));
-                }
+                temp.Add(new MeasurementViewModel(m));
             }
-            else
-            {
-                for (int i = 0; i < measurementsRaw.Count; i++)
-                {
-                    measurementsRaw[i].UpdateDataFromModel(measurementsModels[i]);
-                }
-            }
+            return temp;
         }
 
 
@@ -89,10 +83,10 @@ namespace WpfDesktopApplicationv2.Models
         /// <returns>It returns dictionary of string (key) and data point (value) pairs.</returns>
         private Dictionary<string, DataPoint> GetAsDataPoints(float TimeStamp)
         {
-            if(measurementsRaw.Count > 0)
+            if(measurementsRaw1.Count > 0)
             {
                 Dictionary<string, DataPoint> temp = new Dictionary<string, DataPoint>();
-                foreach(var m in measurementsRaw)
+                foreach(var m in measurementsRaw1)
                 {
                     temp.Add(m.Name, new DataPoint(TimeStamp, float.Parse(m.Data, CultureInfo.InvariantCulture)));
                 }
@@ -109,9 +103,9 @@ namespace WpfDesktopApplicationv2.Models
         /// Constructs Observable collection from List.
         /// </summary>
         /// <returns>Observable collection of measurementviewmodels.</returns>
-        private ObservableCollection<MeasurementViewModel> GetAsMeasurementViewModels()
+        private List<MeasurementViewModel> GetAsMeasurementViewModels()
         {
-            return new ObservableCollection<MeasurementViewModel>(measurementsRaw);
+            return new List<MeasurementViewModel>(measurementsRaw2);
         }
        
     }
