@@ -149,7 +149,6 @@ namespace WpfDesktopApplicationv2.ViewModels
             _charts.Add(new DataPlotViewModel("Temperature", Axes.Temperature, broadcastPointsStore));
             _charts.Add(new DataPlotViewModel("Pressure", Axes.Pressure, broadcastPointsStore));
             _charts.Add(new DataPlotViewModel("Humidity", Axes.Humidity, broadcastPointsStore));
-            initialChart = new DataPlotViewModel("", Axes.Generic, broadcastPointsStore); // this is no good honestly this empty string as key
 
             //TemperatureChart = new DataPlotViewModel("Temperature", Axes.Temperature, broadcastPointsStore);
             //PressureChart = new DataPlotViewModel("Pressure", Axes.Pressure, broadcastPointsStore);
