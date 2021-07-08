@@ -14,6 +14,7 @@
     </UserControl.DataContext>
     <UserControl.Resources>
         <converters:RGBcolorToBrushConverter x:Key="ledStateToColorConverter" />
+        <converters:RGBcolorToCMYKConverter x:Key="rgbColorToCmykConverter"/>
     </UserControl.Resources>
     <Grid
         DataContext="{Binding children[1]}">
@@ -281,21 +282,114 @@
                 Text="{Binding a}">
             </TextBlock>
         </Grid>
-        <Canvas
-            DataContext="{Binding Preview}"
+        <Grid
             Grid.Row="2"
-            Grid.Column="2"
-            Width="100"
-            Height="100"
-            Margin="10, 10, 10, 10"
-            >
-            <Rectangle
-                Panel.ZIndex="1"
-                Width="100"
-                Height="100"
-                Margin="0, 0, 0, 0"
-                Fill="{Binding CanvasColor, Converter={StaticResource ledStateToColorConverter}}">
-            </Rectangle>
-        </Canvas>
+            Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid
+                Grid.Row="1"
+                Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center">
+                    RGB format:
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding SliderR}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    Margin="10, 0, 20, 0"
+                    Text="{Binding SliderValue}">
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding SliderG}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    Text="{Binding SliderValue}">
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding SliderB}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Margin="20, 0, 10, 0"
+                    Text="{Binding SliderValue}">
+                </TextBlock>
+                
+
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center">
+                    HEX format:
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding Preview}"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    Margin="20, 0, 10, 0"
+                    Text="{Binding CanvasColor, Converter={StaticResource ledStateToColorConverter}}">
+                </TextBlock>
+
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center">
+                    CMYK format:
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding Preview}"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Margin="10, 0, 10, 0"
+                    Text="{Binding CanvasColor, Converter={StaticResource rgbColorToCmykConverter}}">
+                </TextBlock>
+
+            </Grid>
+            <Grid
+                Grid.Row="1"
+                Grid.Column="1">
+                <Canvas
+                    DataContext="{Binding Preview}"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Width="90"
+                    Height="90"
+                    VerticalAlignment="Center"
+                    Margin="10, 10, 10, 10">
+                    <Rectangle
+                        Panel.ZIndex="1"
+                        Width="90"
+                        Height="90"
+                        Margin="0, 0, 0, 0"
+                        Stroke="Gray" StrokeThickness="4"
+                        Fill="{Binding CanvasColor, Converter={StaticResource ledStateToColorConverter}}">
+                    </Rectangle>
+                </Canvas>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
