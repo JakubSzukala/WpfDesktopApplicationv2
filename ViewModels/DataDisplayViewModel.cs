@@ -107,12 +107,10 @@ namespace WpfDesktopApplicationv2.ViewModels
         private Dictionary<string, DataPoint> BroadcastDataPoints;
         private LinearAxesModel Axes;
         private float _timeStamp;
-        private float _samplingTime;
-        private string _ipAddress;
+        private ConfigModel _config;
 
         // fields - charts
         private List<DataPlotViewModel> _charts;
-        private DataPlotViewModel initialChart;
         //private DataPlotViewModel TemperatureChart;
         //private DataPlotViewModel PressureChart;
         //private DataPlotViewModel HumidityChart;
@@ -128,13 +126,12 @@ namespace WpfDesktopApplicationv2.ViewModels
         public DataDisplayViewModel()
         {
             // initial values
-            _samplingTime = 1F;
-            _ipAddress = "localhost";
+            _config = new ConfigModel(1F, "localhost", 10);
 
             // data aquisition initialization
-            _mediator = new ServerMediatorModel(_ipAddress); // add ipaddress in constructor and setting after change of ip address
+            _mediator = new ServerMediatorModel(_config.IpAddress); // add ipaddress in constructor and setting after change of ip address
             MeasurementsVM = _mediator.RequestViewModelsFromServer();
-            BroadcastDataPoints = _mediator.RequestDataPointsFromServer(_samplingTime);
+            BroadcastDataPoints = _mediator.RequestDataPointsFromServer(_config.SamplingTime);
             _timeStamp = 0;
 
             // model containing models of available axes configuration
@@ -144,11 +141,12 @@ namespace WpfDesktopApplicationv2.ViewModels
             broadcastPointsStore = new BroadcastPointsStore();
             broadcastMeasurementsCollection = new BroadcastMeasurementsList();
 
-            // charts initialization
+            // charts initialization, pass sampling time as a reference so it will be update if necessary 
+            // but cannot be modified by a chart object
             _charts = new List<DataPlotViewModel>();
-            _charts.Add(new DataPlotViewModel("Temperature", Axes.Temperature, broadcastPointsStore));
-            _charts.Add(new DataPlotViewModel("Pressure", Axes.Pressure, broadcastPointsStore));
-            _charts.Add(new DataPlotViewModel("Humidity", Axes.Humidity, broadcastPointsStore));
+            _charts.Add(new DataPlotViewModel("Temperature", Axes.Temperature, broadcastPointsStore, _config));
+            _charts.Add(new DataPlotViewModel("Pressure", Axes.Pressure, broadcastPointsStore, _config));
+            _charts.Add(new DataPlotViewModel("Humidity", Axes.Humidity, broadcastPointsStore, _config));
 
             //TemperatureChart = new DataPlotViewModel("Temperature", Axes.Temperature, broadcastPointsStore);
             //PressureChart = new DataPlotViewModel("Pressure", Axes.Pressure, broadcastPointsStore);
@@ -192,18 +190,18 @@ namespace WpfDesktopApplicationv2.ViewModels
             // get sampling time
             try
             {
-                _samplingTime = float.Parse(SamplingTimeBox, CultureInfo.InvariantCulture);
+                _config.SamplingTime = float.Parse(SamplingTimeBox, CultureInfo.InvariantCulture);
             }
             catch (Exception e)
             {
                 if(e is InvalidCastException || e is NullReferenceException)
                 {
-                    _samplingTime = 1F;
+                    _config.SamplingTime = 1F;
                 }
             }
 
             // get ip address
-            _ipAddress = IpAddressBox;
+            _config.IpAddress = IpAddressBox;
 
             // reinitialize timer
             if(RequestTimer != null)
@@ -254,7 +252,8 @@ namespace WpfDesktopApplicationv2.ViewModels
         /// </summary>
         private void SetRequestTimer()
         {
-            RequestTimer = new Timer(_samplingTime*1000);
+            
+            RequestTimer = new Timer(_config.SamplingTime*1000);
             
             // Update dictionary with points 
             RequestTimer.Elapsed += UpdateBroadcastDataPointsWrapper;
@@ -286,7 +285,7 @@ namespace WpfDesktopApplicationv2.ViewModels
         {
             if (connected)
             {
-                InfoString = "Connected to \n" + _ipAddress + "\n with sampling time\n " + _samplingTime;
+                InfoString = "Connected to \n" + _config.IpAddress + "\n with sampling time\n " + _config.SamplingTime;
             }
             else
             {
@@ -347,7 +346,7 @@ namespace WpfDesktopApplicationv2.ViewModels
         /// <param name="e"></param>
         private void IncreaseTimeStamp(object sender, EventArgs e)
         {
-            _timeStamp += _samplingTime;
+            _timeStamp += _config.SamplingTime;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
