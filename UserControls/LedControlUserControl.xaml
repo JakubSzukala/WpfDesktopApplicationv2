@@ -282,7 +282,6 @@
             </TextBlock>
         </Grid>
         <Canvas
-            Panel.ZIndex="1"
             DataContext="{Binding Canvas}"
             Grid.Row="2"
             Grid.Column="2"
@@ -291,14 +290,12 @@
             Margin="10, 10, 10, 10"
             >
             <Rectangle
-                Width="30"
-                Height="30"
-                Margin="0, 5, 0, 5"
+                Panel.ZIndex="1"
+                Width="100"
+                Height="100"
+                Margin="0, 0, 0, 0"
                 Fill="{Binding CanvasColor, Converter={StaticResource ledStateToColorConverter}}">
             </Rectangle>
-            <Canvas.Background>
-                <SolidColorBrush Color="{Binding CanvasColor, Converter={StaticResource ledStateToColorConverter}}" />
-            </Canvas.Background>
         </Canvas>
     </Grid>
 </UserControl>
