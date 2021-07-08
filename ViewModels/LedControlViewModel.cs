@@ -13,6 +13,7 @@ namespace WpfDesktopApplicationv2.ViewModels
     public class LedControlViewModel : INotifyPropertyChanged
     {
         enum RGB { R, G, B}
+
         // properties
         private List<LedCommand> _leds;
         public List<LedCommand> Leds
@@ -25,18 +26,9 @@ namespace WpfDesktopApplicationv2.ViewModels
             }
         }
 
-        private Color[] _ledColorSource;
-        public Color[] LedColorSource
-        {
-            get => _ledColorSource;
-            set
-            {
-                _ledColorSource = value;
-                OnPropertyChanged("LedColorSource");
-            }
-        }
+        public ObservableCollection<Color> LedColorSource { get; set; }
 
-        private ObservableCollection<ObservableCollection<int[]>> _stateMatrix;
+        private ObservableCollection<ObservableCollection<int[]>> _stateMatrix; // this does not have to be Observable collection
         public ObservableCollection<ObservableCollection<int[]>> StateMatrix
         {
             get => _stateMatrix;
@@ -83,6 +75,7 @@ namespace WpfDesktopApplicationv2.ViewModels
             dimY = 8;
 
             // initialization of default version of state matrix and color source
+            LedColorSource = new ObservableCollection<Color>();
             GenerateStateMatrix();
             UpdateColorSource();
 
@@ -136,30 +129,45 @@ namespace WpfDesktopApplicationv2.ViewModels
                 _stateMatrix.Add(new ObservableCollection<int[]>());
                 for (int j = 0; j < dimY; j++)
                 {
-                    _stateMatrix[i].Add(new int[] { 0, 200, 0 });
+                    _stateMatrix[i].Add(new int[] { 0, 0, 0 });
                 }
             }
         }
 
         private void UpdateColorSource()
         {
-
-            LedColorSource = new Color[dimX * dimY];
-            for (int row = 0; row < dimX; row++)
+            if(LedColorSource.Count == 0)
             {
-                for (int column = 0; column < dimY; column++)
+                for (int row = 0; row < dimX; row++)
                 {
-                    // is the algorithm good in terms of column or row order ?
-                    Color temp = new Color();
-                    temp = Color.FromArgb(
-                        255,
-                        (byte)StateMatrix[row][column][(int)RGB.R],
-                        (byte)StateMatrix[row][column][(int)RGB.G],
-                        (byte)StateMatrix[row][column][(int)RGB.B]
-                        );
-                    LedColorSource[(row * dimX) + column] = temp;
+                    for (int column = 0; column < dimY; column++)
+                    {
+                        LedColorSource.Add(Color.FromArgb(
+                            150,
+                            (byte)StateMatrix[row][column][(int)RGB.R],
+                            (byte)StateMatrix[row][column][(int)RGB.G],
+                            (byte)StateMatrix[row][column][(int)RGB.B]
+                            ));
+                    }
                 }
             }
+            else
+            {
+                for (int row = 0; row < dimX; row++)
+                {
+                    for (int column = 0; column < dimY; column++)
+                    {
+                        LedColorSource[(row * dimX) + column] = Color.FromArgb(
+                            150,
+                            (byte)StateMatrix[row][column][(int)RGB.R],
+                            (byte)StateMatrix[row][column][(int)RGB.G],
+                            (byte)StateMatrix[row][column][(int)RGB.B]
+                            );
+                    }
+                }
+            }
+            //LedColorSource = new Color[dimX * dimY]; //????
+            
         }
 
 
