@@ -54,7 +54,6 @@ namespace WpfDesktopApplicationv2.ViewModels
             { 
                 _samplingTimeBox = value;
                 OnPropertyChanged("SamplingTimeBox");
-                Debug.WriteLine("Property changed - SamplingTimeBox = " + value);
             }
         }
 
@@ -67,7 +66,6 @@ namespace WpfDesktopApplicationv2.ViewModels
             {
                 _ipAddressBox = value;
                 OnPropertyChanged("IpAddressBox");
-                Debug.WriteLine("Property changed - IpAddresssBox = " + value);
             }
         }
 
@@ -111,9 +109,6 @@ namespace WpfDesktopApplicationv2.ViewModels
 
         // fields - charts
         private List<DataPlotViewModel> _charts;
-        //private DataPlotViewModel TemperatureChart;
-        //private DataPlotViewModel PressureChart;
-        //private DataPlotViewModel HumidityChart;
 
         // Stores
         private BroadcastPointsStore broadcastPointsStore;
@@ -148,10 +143,6 @@ namespace WpfDesktopApplicationv2.ViewModels
             _charts.Add(new DataPlotViewModel("Pressure", Axes.Pressure, broadcastPointsStore, _config));
             _charts.Add(new DataPlotViewModel("Humidity", Axes.Humidity, broadcastPointsStore, _config));
 
-            //TemperatureChart = new DataPlotViewModel("Temperature", Axes.Temperature, broadcastPointsStore);
-            //PressureChart = new DataPlotViewModel("Pressure", Axes.Pressure, broadcastPointsStore);
-            //HumidityChart = new DataPlotViewModel("Humidity", Axes.Humidity, broadcastPointsStore);
-
             ActivePlot = _charts[0];
 
             // buttons initialization 
@@ -180,9 +171,6 @@ namespace WpfDesktopApplicationv2.ViewModels
             {
                 c.ResetChart();
             }
-            //TemperatureChart.ResetChart();
-            //PressureChart.ResetChart();
-            //HumidityChart.ResetChart();
 
             // reset current time stamp 
             _timeStamp = 0;

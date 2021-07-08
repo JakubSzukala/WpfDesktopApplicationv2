@@ -22,6 +22,7 @@ namespace WpfDesktopApplicationv2.ViewModels
         private BroadcastPointsStore _broadcast; //???
         private ConfigModel _config;
         private float _maxXaxis;
+        private OxyColor DataSeriesColor;
 
         // events
         public event PropertyChangedEventHandler PropertyChanged;
@@ -46,8 +47,25 @@ namespace WpfDesktopApplicationv2.ViewModels
                 Title = "Time"
             });
 
+            if (identifier == "Temperature")
+            {
+                DataSeriesColor = OxyColor.Parse("#AAFF0000");
+            }
+            if (identifier == "Humidity")
+            {
+                DataSeriesColor = OxyColor.Parse("#AA0000FF");
+            }
+            if (identifier == "Pressure")
+            {
+                DataSeriesColor = OxyColor.Parse("#AA00FF00");
+            }
+            else
+            {
+                DataSeriesColor = OxyColor.Parse("#AAAA00AA");
+            }
+
             // add empty series for now
-            DataPlotModel.Series.Add(new LineSeries() { Title = Identifier + " data series", Color = OxyColor.Parse("#AAFF0000") });
+            DataPlotModel.Series.Add(new LineSeries() { Title = Identifier + " data series", Color = DataSeriesColor });
 
             // initialize broadcast on which plot will receive dictionary with points
             _broadcast = broadcast;
@@ -69,7 +87,7 @@ namespace WpfDesktopApplicationv2.ViewModels
             // if not create one
             catch
             {
-                DataPlotModel.Series.Add(new LineSeries() { Title = Identifier + " data series", Color = OxyColor.Parse("#FFFF0000") });
+                DataPlotModel.Series.Add(new LineSeries() { Title = Identifier + " data series", Color = DataSeriesColor });
                 lineSeries = DataPlotModel.Series[0] as LineSeries;
                 lineSeries.Points.Add(PickMeasurement(dictionary));
             }
