@@ -14,7 +14,7 @@ namespace WpfDesktopApplicationv2.Models
     /// </summary>
     class ServerMediatorModel
     {
-        private ServerIoTmock _server;
+        private ServerIoT _server;
         private List<MeasurementViewModel> measurementsRaw1;
         private List<MeasurementViewModel> measurementsRaw2;
         private List<DataPoint> DataPoints;
@@ -22,7 +22,7 @@ namespace WpfDesktopApplicationv2.Models
 
         public ServerMediatorModel(string ip)
         {
-            _server = new ServerIoTmock();
+            _server = new ServerIoT();
             measurementsRaw1 = new List<MeasurementViewModel>();
             DataPoints = new List<DataPoint>();
         }
