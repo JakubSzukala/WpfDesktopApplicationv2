@@ -10,7 +10,7 @@ namespace WpfDesktopApplicationv2.Commands
     public class LedCommand : ICommand
     {
         // coordinates 
-        private uint _x, _y;
+        private int _x, _y;
 
         // mediator
         private readonly BroadcastLedSelectedStore _broadcast;
@@ -21,7 +21,7 @@ namespace WpfDesktopApplicationv2.Commands
         /// <param name="x">X coordinate</param>
         /// <param name="y">Y coordinate</param>
         /// <param name="broadcast">Mediator class for broadcasting coordinates of LED</param>
-        public LedCommand(uint x, uint y, BroadcastLedSelectedStore broadcast)
+        public LedCommand(int x, int y, BroadcastLedSelectedStore broadcast)
         {
             _x = x;
             _y = y;
@@ -38,7 +38,7 @@ namespace WpfDesktopApplicationv2.Commands
         public void Execute(object parameter)
         {
             Debug.WriteLine("Led button clicked: " + _x + ", " + _y);
-            _broadcast.OnLedSelected(new KeyValuePair<uint, uint>(_x, _y));
+            _broadcast.OnLedSelected(new KeyValuePair<int, int>(_x, _y));
         }
     }
 }

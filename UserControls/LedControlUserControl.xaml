@@ -282,7 +282,7 @@
             </TextBlock>
         </Grid>
         <Canvas
-            DataContext="{Binding Canvas}"
+            DataContext="{Binding Preview}"
             Grid.Row="2"
             Grid.Column="2"
             Width="100"

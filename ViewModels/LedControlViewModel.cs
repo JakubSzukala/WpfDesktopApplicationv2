@@ -12,6 +12,7 @@ namespace WpfDesktopApplicationv2.ViewModels
 {
     public class LedControlViewModel : INotifyPropertyChanged
     {
+        enum RGB { R, G, B}
         // properties
         private List<LedCommand> _leds;
         public List<LedCommand> Leds
@@ -64,13 +65,13 @@ namespace WpfDesktopApplicationv2.ViewModels
         // canvas preview
         private CanvasPreviewViewModel _canvas;
 
-        public CanvasPreviewViewModel Canvas
+        public CanvasPreviewViewModel Preview
         {
             get => _canvas;
             set
             {
                 _canvas = value;
-                OnPropertyChanged(nameof(Canvas));
+                OnPropertyChanged(nameof(Preview));
             }
         }
 
@@ -104,20 +105,23 @@ namespace WpfDesktopApplicationv2.ViewModels
             SliderB = new SliderViewModel(sliderBValueChanged);
 
             // init canvas preview
-            Canvas = new CanvasPreviewViewModel(sliderRValueChanged, sliderGValueChanged, sliderBValueChanged);
+            Preview = new CanvasPreviewViewModel(sliderRValueChanged, sliderGValueChanged, sliderBValueChanged);
         }
 
-        private void ReceiveLedSelected(object sender, KeyValuePair<uint, uint> coordinates)
+        private void ReceiveLedSelected(object sender, KeyValuePair<int, int> coordinates)
         {
-            // set on coordinates in OC value of preview 
+            StateMatrix[coordinates.Key][coordinates.Value][(int)RGB.R] = (int)Preview.CanvasColor.R;
+            StateMatrix[coordinates.Key][coordinates.Value][(int)RGB.G] = (int)Preview.CanvasColor.G;
+            StateMatrix[coordinates.Key][coordinates.Value][(int)RGB.B] = (int)Preview.CanvasColor.B;
+            UpdateColorSource();
         }
 
         private void InitLedCommandsList()
         {
             _leds = new List<LedCommand>();
-            for (uint i = 0; i < dimX; i++)
+            for (int i = 0; i < dimX; i++)
             {
-                for (uint j = 0; j < dimY; j++)
+                for (int j = 0; j < dimY; j++)
                 {
                     _leds.Add(new LedCommand(i, j, _broadcastCoordinates));
                 }
@@ -149,9 +153,9 @@ namespace WpfDesktopApplicationv2.ViewModels
                     Color temp = new Color();
                     temp = Color.FromArgb(
                         255,
-                        (byte)StateMatrix[row][column][0],
-                        (byte)StateMatrix[row][column][1],
-                        (byte)StateMatrix[row][column][2]
+                        (byte)StateMatrix[row][column][(int)RGB.R],
+                        (byte)StateMatrix[row][column][(int)RGB.G],
+                        (byte)StateMatrix[row][column][(int)RGB.B]
                         );
                     LedColorSource[(row * dimX) + column] = temp;
                 }

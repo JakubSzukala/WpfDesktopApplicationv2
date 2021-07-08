@@ -5,9 +5,9 @@ namespace WpfDesktopApplicationv2.Stores
 {
     public class BroadcastLedSelectedStore
     {
-        public event EventHandler<KeyValuePair<uint, uint>> LedSelected;
+        public event EventHandler<KeyValuePair<int, int>> LedSelected;
 
-        public void OnLedSelected(KeyValuePair<uint, uint> coordinates)
+        public void OnLedSelected(KeyValuePair<int, int> coordinates)
         {
             LedSelected?.Invoke(this, coordinates);
         }
