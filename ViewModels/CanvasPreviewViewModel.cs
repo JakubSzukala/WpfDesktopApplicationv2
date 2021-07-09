@@ -23,7 +23,6 @@ namespace WpfDesktopApplicationv2.ViewModels
         private SliderValueChangedStore storeR;
         private SliderValueChangedStore storeG;
         private SliderValueChangedStore storeB;
-
         
 
         public CanvasPreviewViewModel(SliderValueChangedStore srcR, SliderValueChangedStore srcG, SliderValueChangedStore srcB)

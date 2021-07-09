@@ -7,6 +7,7 @@ using WpfDesktopApplicationv2.Commands;
 using WpfDesktopApplicationv2.Converters;
 using WpfDesktopApplicationv2.Stores;
 using System.Windows.Media;
+using WpfDesktopApplicationv2.Models;
 
 namespace WpfDesktopApplicationv2.ViewModels
 {
@@ -39,10 +40,36 @@ namespace WpfDesktopApplicationv2.ViewModels
             }
         }
 
+        private string _ipAddressBox;
+
+        public string IpAddressBox
+        {
+            get { return _ipAddressBox; }
+            set
+            {
+                _ipAddressBox = value;
+                OnPropertyChanged("IpAddressBox");
+            }
+        }
+
+        private string _upToDate;
+
+        public string UpToDate
+        {
+            get { return _upToDate; }
+            set 
+            { 
+                _upToDate = value;
+                OnPropertyChanged(nameof(UpToDate));
+            }
+        }
+
 
         // fields
         private readonly int dimX, dimY;
         private readonly BroadcastLedSelectedStore _broadcastCoordinates;
+        private readonly ServerMediatorModel _mediator;
+        private ConfigModel _config;
 
         // sliders (not necesarily props?)
         public SliderViewModel SliderR { get; set; }
@@ -57,6 +84,9 @@ namespace WpfDesktopApplicationv2.ViewModels
         // canvas preview
         private CanvasPreviewViewModel _canvas;
 
+        // buttons 
+        public ButtonCommand UpdateButton { get; set; }
+
         public CanvasPreviewViewModel Preview
         {
             get => _canvas;
@@ -66,8 +96,6 @@ namespace WpfDesktopApplicationv2.ViewModels
                 OnPropertyChanged(nameof(Preview));
             }
         }
-
-
 
         public LedControlViewModel()
         {
@@ -99,6 +127,15 @@ namespace WpfDesktopApplicationv2.ViewModels
 
             // init canvas preview
             Preview = new CanvasPreviewViewModel(sliderRValueChanged, sliderGValueChanged, sliderBValueChanged);
+
+            // config and server mediator setup 
+            _config = new ConfigModel(1F, "192.168.56.5", 10);
+            _mediator = new ServerMediatorModel(_config.IpAddress);
+
+            // initialize buttons
+            UpdateButton = new ButtonCommand(PostLedControlWrapper);
+
+            UpToDate = "Yes";
         }
 
         private void ReceiveLedSelected(object sender, KeyValuePair<int, int> coordinates)
@@ -166,10 +203,15 @@ namespace WpfDesktopApplicationv2.ViewModels
                     }
                 }
             }
-            //LedColorSource = new Color[dimX * dimY]; //????
-            
+
+            UpToDate = "No";
         }
 
+        private void PostLedControlWrapper()
+        {
+            _mediator.PostLedControl(StateMatrix);
+            UpToDate = "Yes";
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propName)

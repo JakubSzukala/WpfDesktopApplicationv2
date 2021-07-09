@@ -6,18 +6,10 @@ using System.Text;
 namespace WpfDesktopApplicationv2.Models
 {
     public class LinearAxesModel
-    {
-        public readonly LinearAxis Temperature;
-        public readonly LinearAxis Pressure;
-        public readonly LinearAxis Humidity;
-        public readonly LinearAxis Roll;
-        public readonly LinearAxis Pitch;
-        public readonly LinearAxis Yaw;
-        public readonly LinearAxis Generic;
-
-        public LinearAxesModel()
+    { 
+        public LinearAxis Temperature()
         {
-            Temperature = new LinearAxis()
+            return new LinearAxis()
             {
                 Position = AxisPosition.Left,
                 Minimum = -30,
@@ -26,8 +18,11 @@ namespace WpfDesktopApplicationv2.Models
                 Unit = "*C",
                 Title = "Temperature"
             };
+        }
 
-            Pressure = new LinearAxis()
+        public LinearAxis Pressure()
+        {
+            return new LinearAxis()
             {
                 Position = AxisPosition.Left,
                 Minimum = 260,
@@ -36,8 +31,11 @@ namespace WpfDesktopApplicationv2.Models
                 Unit = "hPa",
                 Title = "Pressure"
             };
+        }
 
-            Humidity = new LinearAxis()
+        public LinearAxis Humidity()
+        {
+            return new LinearAxis()
             {
                 Position = AxisPosition.Left,
                 Minimum = 20,
@@ -46,8 +44,11 @@ namespace WpfDesktopApplicationv2.Models
                 Unit = "%",
                 Title = "Humidity"
             };
+        }
 
-            Roll = new LinearAxis()
+        public LinearAxis Roll()
+        {
+            return new LinearAxis()
             {
                 Position = AxisPosition.Left,
                 Minimum = -500,
@@ -56,7 +57,11 @@ namespace WpfDesktopApplicationv2.Models
                 Unit = "°",
                 Title = "Roll"
             };
-            Pitch = new LinearAxis()
+        }
+
+        public LinearAxis Pitch()
+        {
+            return new LinearAxis()
             {
                 Position = AxisPosition.Left,
                 Minimum = -500,
@@ -65,8 +70,11 @@ namespace WpfDesktopApplicationv2.Models
                 Unit = "°",
                 Title = "Pitch"
             };
+        }
 
-            Yaw = new LinearAxis()
+        public LinearAxis Yaw()
+        {
+            return new LinearAxis()
             {
                 Position = AxisPosition.Left,
                 Minimum = -500,
@@ -75,8 +83,11 @@ namespace WpfDesktopApplicationv2.Models
                 Unit = "°",
                 Title = "Yaw"
             };
+        }
 
-            Generic = new LinearAxis()
+        public LinearAxis Generic()
+        {
+            return new LinearAxis()
             {
                 Position = AxisPosition.Left,
                 Minimum = 0,
@@ -85,6 +96,9 @@ namespace WpfDesktopApplicationv2.Models
                 Unit = "",
                 Title = ""
             };
+        }
+        public LinearAxesModel()
+        { 
         }
     }
 }

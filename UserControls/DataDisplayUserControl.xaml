@@ -173,18 +173,18 @@
                 Refresh Data List
             </Button>
             <TextBlock
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Text="{Binding InfoString}">
+                Grid.Row="2"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="{Binding InfoString}">
             </TextBlock>
             <TextBlock
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                        Error messages here
+                Grid.Row="3"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                Error messages here
             </TextBlock>
 
         </Grid>

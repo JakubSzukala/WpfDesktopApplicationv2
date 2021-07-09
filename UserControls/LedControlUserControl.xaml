@@ -83,7 +83,6 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="2*" />
-                <RowDefinition Height="2*" />
                 <RowDefinition Height="20" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -114,72 +113,37 @@
                     Text="{Binding IpAddressBox}">
             </TextBox>
             <TextBlock
-                    Grid.Row="3"
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-                    Connected to:
-            </TextBlock>
-            <TextBlock
-                    Grid.Row="3"
-                    Grid.Column="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-                    Connected to...
-            </TextBlock>
-            <Button
-                    Grid.Row="3"
-                    Grid.Column="3"
-                    Margin="10,5,10,0"
-                    VerticalAlignment="Center"
-                    Command="{Binding DisconnectButton}">
-                Disconnect
-            </Button>
-
-            <TextBlock
                     Grid.Row="1"
                     Grid.Column="3"
                     HorizontalAlignment="Center">
                     Control
             </TextBlock>
           
-            <Button
-                    Grid.Row="2"
-                    Grid.Column="3"
-                    Margin="10,5,10,0"
-                    VerticalAlignment="Center"
-                    Command="{Binding ConnectButton}">
-                Connect
-            </Button>
+            
             <TextBlock
-                    Grid.Row="4"
+                    Grid.Row="3"
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
                     Up to date:
             </TextBlock>
             <TextBlock
-                    Grid.Row="4"
-                    Grid.Column="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-                    Yes / No
-            </TextBlock>
-            <Button
-                    Grid.Row="4"
-                    Grid.Column="3"
-                    Margin="10,5,10,0"
-                    VerticalAlignment="Center"
-                    Command="{Binding DisconnectButton}">
-                Update
-            </Button>
-            <TextBlock
                     Grid.Row="3"
                     Grid.Column="2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Text="{Binding PlotToDisplayBox}">
+                    Text="{Binding UpToDate}">
+                    
             </TextBlock>
+            <Button
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Margin="10,5,10,0"
+                    VerticalAlignment="Center"
+                    Command="{Binding UpdateButton}">
+                Update
+            </Button>
+            
         </Grid>
         <Grid
             Grid.Row="1"
@@ -221,7 +185,7 @@
                 Height="35"
                 Background="IndianRed"
                 TextAlignment="Center"
-                Text="{Binding a}">
+                >
             </TextBlock>
 
             <Slider
@@ -249,8 +213,7 @@
                 Width="35"
                 Height="35"
                 Background="SeaGreen"
-                TextAlignment="Center"
-                Text="{Binding a}">
+                TextAlignment="Center">
             </TextBlock>
 
             <Slider
@@ -278,8 +241,7 @@
                 Width="35"
                 Height="35"
                 Background="RoyalBlue"
-                TextAlignment="Center"
-                Text="{Binding a}">
+                TextAlignment="Center">
             </TextBlock>
         </Grid>
         <Grid
