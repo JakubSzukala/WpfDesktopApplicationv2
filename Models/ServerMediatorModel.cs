@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WpfDesktopApplicationv2.Converters;
+using WpfDesktopApplicationv2.Stores;
 using WpfDesktopApplicationv2.ViewModels;
 
 namespace WpfDesktopApplicationv2.Models
@@ -23,11 +24,13 @@ namespace WpfDesktopApplicationv2.Models
         private List<DataPoint> DataPoints;
         private Dictionary<string, List<int>> _ledsToPost;
         private ThreeDtoOneDConverter _converter;
+        private ErrorStore _errorStore;
 
 
-        public ServerMediatorModel(string ip)
+        public ServerMediatorModel(string ip, ErrorStore err)
         {
-            _server = new ServerIoT(ip);
+            _errorStore = err;
+            _server = new ServerIoT(ip, err);
             _converter = new ThreeDtoOneDConverter();
             measurementsRaw1 = new List<MeasurementViewModel>();
             measurementsRaw2 = new List<MeasurementViewModel>();
@@ -80,9 +83,18 @@ namespace WpfDesktopApplicationv2.Models
             string responseTextEnv = await responseTaskEnv;
             string responseTextRpy = await responseTaskRpy;
 
+            JArray responseJsonEnv = new JArray();
+            JArray responseJsonRpy = new JArray();
             // parse as JArray object
-            JArray responseJsonEnv = JArray.Parse(responseTextEnv);
-            JArray responseJsonRpy = JArray.Parse(responseTextRpy);
+            try
+            {
+                responseJsonEnv = JArray.Parse(responseTextEnv);
+                responseJsonRpy = JArray.Parse(responseTextRpy);
+            }
+            catch(Exception e)
+            {
+                _errorStore.ErrorState = e.ToString();
+            }
 
             // convert into models lists and merge together
             List<MeasurementModel> ModelsEnv = responseJsonEnv.ToObject<List<MeasurementModel>>();

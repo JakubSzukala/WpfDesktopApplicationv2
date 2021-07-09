@@ -70,6 +70,7 @@ namespace WpfDesktopApplicationv2.ViewModels
         private readonly BroadcastLedSelectedStore _broadcastCoordinates;
         private readonly ServerMediatorModel _mediator;
         private ConfigModel _config;
+        private ErrorStore _errorStore;
 
         // sliders (not necesarily props?)
         public SliderViewModel SliderR { get; set; }
@@ -102,6 +103,9 @@ namespace WpfDesktopApplicationv2.ViewModels
             dimX = 8;
             dimY = 8;
 
+            _errorStore = new ErrorStore();
+            _errorStore.ErrorState = " ";
+
             // initialization of default version of state matrix and color source
             LedColorSource = new ObservableCollection<Color>();
             GenerateStateMatrix();
@@ -130,7 +134,7 @@ namespace WpfDesktopApplicationv2.ViewModels
 
             // config and server mediator setup 
             _config = new ConfigModel(1F, "192.168.56.5", 10);
-            _mediator = new ServerMediatorModel(_config.IpAddress);
+            _mediator = new ServerMediatorModel(_config.IpAddress, _errorStore);
 
             // initialize buttons
             UpdateButton = new ButtonCommand(PostLedControlWrapper);

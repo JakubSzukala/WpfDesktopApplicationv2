@@ -80,6 +80,17 @@ namespace WpfDesktopApplicationv2.ViewModels
             }
         }
 
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set 
+            { 
+                _errorMessage = value;
+                OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
+
 
         private string _infoString;
 
@@ -122,6 +133,7 @@ namespace WpfDesktopApplicationv2.ViewModels
         // Stores
         private BroadcastPointsStore broadcastPointsStore;
         private BroadcastMeasurementsList broadcastMeasurementsCollection;
+        private ErrorStore _errorStore;
 
         // timer
         private Timer RequestTimer;
@@ -133,7 +145,12 @@ namespace WpfDesktopApplicationv2.ViewModels
             Config = new ConfigModel(1F, "192.168.56.5", 10);
 
             // data aquisition initialization
-            _mediator = new ServerMediatorModel(Config.IpAddress); // add ipaddress in constructor and setting after change of ip address
+            _errorStore = new ErrorStore();
+            _errorStore.ErrorState = " ";
+            _errorStore.Error += ErrorStateUpdate;
+            ErrorMessage = _errorStore.ErrorState;
+
+            _mediator = new ServerMediatorModel(Config.IpAddress, _errorStore);
             MeasurementsVM = _mediator.RequestViewModelsFromServer();
             BroadcastDataPoints = _mediator.RequestDataPointsFromServer(Config.SamplingTime);
             _timeStamp = 0;
@@ -361,6 +378,10 @@ namespace WpfDesktopApplicationv2.ViewModels
         private void OnPropertyChanged(string propName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+        private void ErrorStateUpdate()
+        {
+            ErrorMessage = _errorStore.ErrorState;
         }
     }
 }

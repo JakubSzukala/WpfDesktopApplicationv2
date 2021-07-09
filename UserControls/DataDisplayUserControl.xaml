@@ -183,8 +183,8 @@
                 Grid.Row="3"
                 Grid.Column="1"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-                Error messages here
+                VerticalAlignment="Center"
+                Text="{Binding ErrorMessage}">
             </TextBlock>
 
         </Grid>

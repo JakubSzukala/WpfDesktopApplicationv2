@@ -9,16 +9,19 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using WpfDesktopApplicationv2.Stores;
 
 namespace WpfDesktopApplicationv2.Models
 {
     public class ServerIoT
     {
         private string ip;
+        private ErrorStore _error;
 
-        public ServerIoT(string _ip)
+        public ServerIoT(string _ip, ErrorStore err)
         {
             ip = _ip;
+            _error = err;
         }
 
         /**
@@ -49,9 +52,10 @@ namespace WpfDesktopApplicationv2.Models
         }
 
 
-        /**
-          * @brief HTTP GET request using HttpClient
-          */
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> GETwithClient()
         {
             string responseText = null;
@@ -61,12 +65,14 @@ namespace WpfDesktopApplicationv2.Models
                 using (HttpClient client = new HttpClient())
                 {
                     responseText = await client.GetStringAsync(GetFileUrl());
+                    _error.ErrorState = "Connection succesful";
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine("NETWORK ERROR");
                 Debug.WriteLine(e);
+                _error.ErrorState = e.ToString();
             }
 
             return responseText;
@@ -81,12 +87,14 @@ namespace WpfDesktopApplicationv2.Models
                 using (HttpClient client = new HttpClient())
                 {
                     responseText = await client.GetStringAsync(GetFileUrlAngles());
+                    _error.ErrorState = "Connection succesful";
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine("NETWORK ERROR");
                 Debug.WriteLine(e);
+                _error.ErrorState = e.ToString();
             }
 
             return responseText;
@@ -134,12 +142,14 @@ namespace WpfDesktopApplicationv2.Models
                     var result = await client.PostAsync(GetFileUrlPostLeds(), httpContent);
                     // Read response content
                     responseText = await result.Content.ReadAsStringAsync();
+                    _error.ErrorState = "Connection succesful";
                 }
             }
             catch (Exception e)
             {
                 Debug.WriteLine("NETWORK ERROR");
                 Debug.WriteLine(e);
+                _error.ErrorState = e.ToString();
             }
 
             return responseText;
