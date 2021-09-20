@@ -4,7 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using WpfDesktopApplicationv2.Converters;
+using WpfDesktopApplicationv2.Stores;
 using WpfDesktopApplicationv2.ViewModels;
 
 namespace WpfDesktopApplicationv2.Models
@@ -14,17 +18,24 @@ namespace WpfDesktopApplicationv2.Models
     /// </summary>
     class ServerMediatorModel
     {
-        private ServerIoTmock _server;
+        private ServerIoT _server;
         private List<MeasurementViewModel> measurementsRaw1;
         private List<MeasurementViewModel> measurementsRaw2;
         private List<DataPoint> DataPoints;
+        private Dictionary<string, List<int>> _ledsToPost;
+        private ThreeDtoOneDConverter _converter;
+        private ErrorStore _errorStore;
 
 
-        public ServerMediatorModel(string ip)
+        public ServerMediatorModel(string ip, ErrorStore err)
         {
-            _server = new ServerIoTmock();
+            _errorStore = err;
+            _server = new ServerIoT(ip, err);
+            _converter = new ThreeDtoOneDConverter();
             measurementsRaw1 = new List<MeasurementViewModel>();
+            measurementsRaw2 = new List<MeasurementViewModel>();
             DataPoints = new List<DataPoint>();
+            _ledsToPost = new Dictionary<string, List<int>>();
         }
 
 
@@ -37,7 +48,7 @@ namespace WpfDesktopApplicationv2.Models
         public Dictionary<string, DataPoint> RequestDataPointsFromServer(float TimeStamp)
         {
             // get raw data into measurementsRaw list 
-            measurementsRaw1 = GetRawData();
+            GetRawData(measurementsRaw1);
 
             // transform it to dictionary of data points from oxyplot identified by measurement name
             return GetAsDataPoints(TimeStamp);
@@ -51,7 +62,7 @@ namespace WpfDesktopApplicationv2.Models
         public List<MeasurementViewModel> RequestViewModelsFromServer()
         {
             // get raw data into measurementsRaw list 
-            measurementsRaw2 = GetRawData();
+            GetRawData(measurementsRaw2);
 
             // transform it to observable collection of viewmodels
             return GetAsMeasurementViewModels();
@@ -62,17 +73,53 @@ namespace WpfDesktopApplicationv2.Models
         /// Gets data from server in form of JArray and processes it into a List of VMs
         /// </summary>
         /// <returns></returns>
-        private List<MeasurementViewModel> GetRawData()
+        private async void GetRawData(List<MeasurementViewModel> list)
         {
-            JArray measurementsJson = _server.getMeasurements();
-            List<MeasurementViewModel> temp = new List<MeasurementViewModel>();
-            List<MeasurementModel> measurementsModels = measurementsJson.ToObject<List<MeasurementModel>>();
+            // request a data from server
+            Task<string> responseTaskEnv = _server.GETwithClient();
+            Task<string> responseTaskRpy = _server.GETwithClientRPY();
             
-            foreach (var m in measurementsModels)
+            // await for response
+            string responseTextEnv = await responseTaskEnv;
+            string responseTextRpy = await responseTaskRpy;
+
+            JArray responseJsonEnv = new JArray();
+            JArray responseJsonRpy = new JArray();
+            // parse as JArray object
+            try
             {
-                temp.Add(new MeasurementViewModel(m));
+                responseJsonEnv = JArray.Parse(responseTextEnv);
+                responseJsonRpy = JArray.Parse(responseTextRpy);
             }
-            return temp;
+            catch(Exception e)
+            {
+                _errorStore.ErrorState = e.ToString();
+            }
+
+            // convert into models lists and merge together
+            List<MeasurementModel> ModelsEnv = responseJsonEnv.ToObject<List<MeasurementModel>>();
+            List<Measurement3dModel> ModelsRpy = responseJsonRpy.ToObject<List<Measurement3dModel>>();
+
+            // expand each 3d model into 3 x 1d models and connect them together
+            List<MeasurementModel> SingleModelsRpy = new List<MeasurementModel>();
+            foreach(var m in ModelsRpy)
+            {
+                //SingleModelsRpy.Concat(_converter.Convert(m)).ToList();
+                var temp = _converter.Convert(m);
+                SingleModelsRpy.Add(temp[0]);
+                SingleModelsRpy.Add(temp[1]);
+                SingleModelsRpy.Add(temp[2]);
+            }
+
+            // concatenate into final list
+            List<MeasurementModel> measurementModels = ModelsEnv.Concat(SingleModelsRpy).ToList();
+
+            list.Clear();
+            foreach (var m in measurementModels)
+            {
+                list.Add(new MeasurementViewModel(m));
+            }
+
         }
 
 
@@ -107,6 +154,31 @@ namespace WpfDesktopApplicationv2.Models
         {
             return new List<MeasurementViewModel>(measurementsRaw2);
         }
+
+        public async void PostLedControl(ObservableCollection<ObservableCollection<int[]>> stateMatrix)
+        {
+            AdjustFormat(stateMatrix);
+
+            Task<string> responseTask = _server.POSTwithClient(_ledsToPost);
+
+            string responseText = await responseTask;
+        }
        
+        public void AdjustFormat(ObservableCollection<ObservableCollection<int[]>> stateMatrix)
+        {
+            _ledsToPost.Clear(); // src of errors? in case results are empty dictionary check this
+            for (int row = 0; row < stateMatrix.Count; row++)
+            {
+                for (int column = 0; column < stateMatrix[0].Count; column++)
+                {
+                    _ledsToPost.Add(new string($"LED{column}{row}"),
+                        new List<int>(new int[3] {
+                            stateMatrix[row][column][0],
+                            stateMatrix[row][column][1],
+                            stateMatrix[row][column][2]
+                        }));
+                }
+            }
+        }
     }
 }

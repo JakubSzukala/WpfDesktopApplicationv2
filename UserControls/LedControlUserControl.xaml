@@ -1,0 +1,357 @@
+﻿<UserControl x:Class="WpfDesktopApplicationv2.UserControls.LedControlUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfDesktopApplicationv2.UserControls"
+             xmlns:vms="clr-namespace:WpfDesktopApplicationv2.ViewModels"
+             xmlns:converters="clr-namespace:WpfDesktopApplicationv2.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+                             
+    <UserControl.DataContext>
+        <vms:ParentViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <converters:RGBcolorToBrushConverter x:Key="ledStateToColorConverter" />
+        <converters:RGBcolorToCMYKConverter x:Key="rgbColorToCmykConverter"/>
+    </UserControl.Resources>
+    <Grid
+        DataContext="{Binding children[1]}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+        <UniformGrid
+            Panel.ZIndex="1"
+            Grid.Row="1"
+            Grid.Column="1">
+            <ItemsControl ItemsSource="{Binding Leds}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="8" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button
+                            Content=""
+                            Width="30"
+                            Height="30"
+                            Margin="0, 5, 0, 5"
+                            Command="{Binding Path=.}"
+                            Background="Transparent">
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </UniformGrid>
+        <UniformGrid
+            Grid.Row="1"
+            Grid.Column="1">
+            <ItemsControl ItemsSource="{Binding LedColorSource}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="8" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle
+                            Width="30"
+                            Height="30"
+                            Margin="0, 5, 0, 5"
+                            Fill="{Binding Path=., Converter={StaticResource ledStateToColorConverter}}">
+                        </Rectangle>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </UniformGrid>
+        <Grid
+                Grid.Row="2"
+                Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center">
+                    Parameters
+            </TextBlock>
+            <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    Ip Address
+            </TextBlock>
+            <TextBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Margin="10,5,10,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding IpAddressBox}">
+            </TextBox>
+            <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    HorizontalAlignment="Center">
+                    Control
+            </TextBlock>
+          
+            
+            <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                    Up to date:
+            </TextBlock>
+            <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Text="{Binding UpToDate}">
+                    
+            </TextBlock>
+            <Button
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Margin="10,5,10,0"
+                    VerticalAlignment="Center"
+                    Command="{Binding UpdateButton}">
+                Update
+            </Button>
+            
+        </Grid>
+        <Grid
+            Grid.Row="1"
+            Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Slider
+                DataContext="{Binding SliderR}"
+                Grid.Row="1"
+                Grid.Column="0"
+                Width="300" 
+                Height="40"
+                Orientation="Horizontal" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Center"
+                Margin="15, 0, 0, 0"
+                Value="{Binding SliderValue}" 
+                Minimum="0" 
+                Maximum="255" 
+                SmallChange="1"
+                LargeChange="10"
+                TickPlacement="BottomRight" 
+                TickFrequency="10">
+            </Slider>
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="10"
+                Width="35"
+                Height="35"
+                Background="IndianRed"
+                TextAlignment="Center"
+                >
+            </TextBlock>
+
+            <Slider
+                DataContext="{Binding SliderG}"
+                Grid.Row="2"
+                Grid.Column="0"
+                Width="300" 
+                Height="40"
+                Orientation="Horizontal" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Center"
+                Margin="15, 0, 0, 0"
+                Value="{Binding SliderValue}" 
+                Minimum="0" 
+                Maximum="255" 
+                SmallChange="1"
+                LargeChange="10"
+                TickPlacement="BottomRight" 
+                TickFrequency="10">
+            </Slider>
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="10"
+                Width="35"
+                Height="35"
+                Background="SeaGreen"
+                TextAlignment="Center">
+            </TextBlock>
+
+            <Slider
+                DataContext="{Binding SliderB}"
+                Grid.Row="3"
+                Grid.Column="0"
+                Width="300" 
+                Height="40"
+                Orientation="Horizontal" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Center"
+                Margin="15, 0, 0, 0"
+                Value="{Binding SliderValue}" 
+                Minimum="0" 
+                Maximum="255" 
+                SmallChange="1"
+                LargeChange="10"
+                TickPlacement="BottomRight" 
+                TickFrequency="10">
+            </Slider>
+            <TextBlock
+                Grid.Row="3"
+                Grid.Column="1"
+                Margin="10"
+                Width="35"
+                Height="35"
+                Background="RoyalBlue"
+                TextAlignment="Center">
+            </TextBlock>
+        </Grid>
+        <Grid
+            Grid.Row="2"
+            Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid
+                Grid.Row="1"
+                Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center">
+                    RGB format:
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding SliderR}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    Margin="10, 0, 20, 0"
+                    Text="{Binding SliderValue}">
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding SliderG}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    Text="{Binding SliderValue}">
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding SliderB}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Margin="20, 0, 10, 0"
+                    Text="{Binding SliderValue}">
+                </TextBlock>
+                
+
+                <TextBlock
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center">
+                    HEX format:
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding Preview}"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    Margin="20, 0, 10, 0"
+                    Text="{Binding CanvasColor, Converter={StaticResource ledStateToColorConverter}}">
+                </TextBlock>
+
+                <TextBlock
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center">
+                    CMYK format:
+                </TextBlock>
+                <TextBlock
+                    DataContext="{Binding Preview}"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Margin="10, 0, 10, 0"
+                    Text="{Binding CanvasColor, Converter={StaticResource rgbColorToCmykConverter}}">
+                </TextBlock>
+
+            </Grid>
+            <Grid
+                Grid.Row="1"
+                Grid.Column="1">
+                <Canvas
+                    DataContext="{Binding Preview}"
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Width="90"
+                    Height="90"
+                    VerticalAlignment="Center"
+                    Margin="10, 10, 10, 10">
+                    <Rectangle
+                        Panel.ZIndex="1"
+                        Width="90"
+                        Height="90"
+                        Margin="0, 0, 0, 0"
+                        Stroke="Gray" StrokeThickness="4"
+                        Fill="{Binding CanvasColor, Converter={StaticResource ledStateToColorConverter}}">
+                    </Rectangle>
+                </Canvas>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

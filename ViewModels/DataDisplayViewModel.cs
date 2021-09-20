@@ -54,7 +54,6 @@ namespace WpfDesktopApplicationv2.ViewModels
             { 
                 _samplingTimeBox = value;
                 OnPropertyChanged("SamplingTimeBox");
-                Debug.WriteLine("Property changed - SamplingTimeBox = " + value);
             }
         }
 
@@ -67,7 +66,6 @@ namespace WpfDesktopApplicationv2.ViewModels
             {
                 _ipAddressBox = value;
                 OnPropertyChanged("IpAddressBox");
-                Debug.WriteLine("Property changed - IpAddresssBox = " + value);
             }
         }
 
@@ -79,6 +77,17 @@ namespace WpfDesktopApplicationv2.ViewModels
             {
                 _plotToDisplayBox = value;
                 OnPropertyChanged("PlotToDisplayBox");
+            }
+        }
+
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set 
+            { 
+                _errorMessage = value;
+                OnPropertyChanged(nameof(ErrorMessage));
             }
         }
 
@@ -95,6 +104,15 @@ namespace WpfDesktopApplicationv2.ViewModels
             }
         }
 
+        //private ConfigModel _config;
+        private ConfigModel _config;
+
+        public ConfigModel Config
+        {
+            get { return _config; }
+            set { _config = value; }
+        }
+
 
         // buttons 
         public ButtonCommand ConnectButton { get; set; }
@@ -107,19 +125,15 @@ namespace WpfDesktopApplicationv2.ViewModels
         private Dictionary<string, DataPoint> BroadcastDataPoints;
         private LinearAxesModel Axes;
         private float _timeStamp;
-        private float _samplingTime;
-        private string _ipAddress;
+        
 
         // fields - charts
         private List<DataPlotViewModel> _charts;
-        private DataPlotViewModel initialChart;
-        //private DataPlotViewModel TemperatureChart;
-        //private DataPlotViewModel PressureChart;
-        //private DataPlotViewModel HumidityChart;
 
         // Stores
         private BroadcastPointsStore broadcastPointsStore;
         private BroadcastMeasurementsList broadcastMeasurementsCollection;
+        private ErrorStore _errorStore;
 
         // timer
         private Timer RequestTimer;
@@ -128,13 +142,17 @@ namespace WpfDesktopApplicationv2.ViewModels
         public DataDisplayViewModel()
         {
             // initial values
-            _samplingTime = 1F;
-            _ipAddress = "localhost";
+            Config = new ConfigModel(1F, "192.168.56.5", 10);
 
             // data aquisition initialization
-            _mediator = new ServerMediatorModel(_ipAddress); // add ipaddress in constructor and setting after change of ip address
+            _errorStore = new ErrorStore();
+            _errorStore.ErrorState = " ";
+            _errorStore.Error += ErrorStateUpdate;
+            ErrorMessage = _errorStore.ErrorState;
+
+            _mediator = new ServerMediatorModel(Config.IpAddress, _errorStore);
             MeasurementsVM = _mediator.RequestViewModelsFromServer();
-            BroadcastDataPoints = _mediator.RequestDataPointsFromServer(_samplingTime);
+            BroadcastDataPoints = _mediator.RequestDataPointsFromServer(Config.SamplingTime);
             _timeStamp = 0;
 
             // model containing models of available axes configuration
@@ -144,16 +162,23 @@ namespace WpfDesktopApplicationv2.ViewModels
             broadcastPointsStore = new BroadcastPointsStore();
             broadcastMeasurementsCollection = new BroadcastMeasurementsList();
 
-            // charts initialization
+            // charts initialization, pass sampling time as a reference so it will be update if necessary 
+            // but cannot be modified by a chart object
             _charts = new List<DataPlotViewModel>();
-            _charts.Add(new DataPlotViewModel("Temperature", Axes.Temperature, broadcastPointsStore));
-            _charts.Add(new DataPlotViewModel("Pressure", Axes.Pressure, broadcastPointsStore));
-            _charts.Add(new DataPlotViewModel("Humidity", Axes.Humidity, broadcastPointsStore));
-            initialChart = new DataPlotViewModel("", Axes.Generic, broadcastPointsStore); // this is no good honestly this empty string as key
+            _charts.Add(new DataPlotViewModel("TemmperatureFromHumidity", Axes.Temperature(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("TemmperatureFromPressure", Axes.Temperature(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("Pressure", Axes.Pressure(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("Humidity", Axes.Humidity(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("yaw:acceleration", Axes.Yaw(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("pitch:acceleration", Axes.Pitch(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("roll:acceleration", Axes.Roll(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("y:magnetic", Axes.Yaw(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("x:magnetic", Axes.Pitch(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("z:magnetic", Axes.Roll(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("yaw:gyroscope", Axes.Yaw(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("pitch:gyroscope", Axes.Pitch(), broadcastPointsStore, Config));
+            _charts.Add(new DataPlotViewModel("roll:gyroscope", Axes.Roll(), broadcastPointsStore, Config));
 
-            //TemperatureChart = new DataPlotViewModel("Temperature", Axes.Temperature, broadcastPointsStore);
-            //PressureChart = new DataPlotViewModel("Pressure", Axes.Pressure, broadcastPointsStore);
-            //HumidityChart = new DataPlotViewModel("Humidity", Axes.Humidity, broadcastPointsStore);
 
             ActivePlot = _charts[0];
 
@@ -183,9 +208,6 @@ namespace WpfDesktopApplicationv2.ViewModels
             {
                 c.ResetChart();
             }
-            //TemperatureChart.ResetChart();
-            //PressureChart.ResetChart();
-            //HumidityChart.ResetChart();
 
             // reset current time stamp 
             _timeStamp = 0;
@@ -193,18 +215,18 @@ namespace WpfDesktopApplicationv2.ViewModels
             // get sampling time
             try
             {
-                _samplingTime = float.Parse(SamplingTimeBox, CultureInfo.InvariantCulture);
+                Config.SamplingTime = float.Parse(SamplingTimeBox, CultureInfo.InvariantCulture);
             }
             catch (Exception e)
             {
                 if(e is InvalidCastException || e is NullReferenceException)
                 {
-                    _samplingTime = 1F;
+                    Config.SamplingTime = 1F;
                 }
             }
 
             // get ip address
-            _ipAddress = IpAddressBox;
+            Config.IpAddress = IpAddressBox;
 
             // reinitialize timer
             if(RequestTimer != null)
@@ -255,7 +277,8 @@ namespace WpfDesktopApplicationv2.ViewModels
         /// </summary>
         private void SetRequestTimer()
         {
-            RequestTimer = new Timer(_samplingTime*1000);
+            
+            RequestTimer = new Timer(Config.SamplingTime*1000);
             
             // Update dictionary with points 
             RequestTimer.Elapsed += UpdateBroadcastDataPointsWrapper;
@@ -287,7 +310,7 @@ namespace WpfDesktopApplicationv2.ViewModels
         {
             if (connected)
             {
-                InfoString = "Connected to \n" + _ipAddress + "\n with sampling time\n " + _samplingTime;
+                InfoString = "Connected to \n" + Config.IpAddress + "\n with sampling time\n " + Config.SamplingTime;
             }
             else
             {
@@ -348,13 +371,17 @@ namespace WpfDesktopApplicationv2.ViewModels
         /// <param name="e"></param>
         private void IncreaseTimeStamp(object sender, EventArgs e)
         {
-            _timeStamp += _samplingTime;
+            _timeStamp += Config.SamplingTime;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
+        private void ErrorStateUpdate()
+        {
+            ErrorMessage = _errorStore.ErrorState;
         }
     }
 }

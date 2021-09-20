@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace WpfDesktopApplicationv2.Commands
 {
-    class ButtonCommand:ICommand
+    public class ButtonCommand:ICommand
     {
         private Action _handler;
         private bool _isEnabled;

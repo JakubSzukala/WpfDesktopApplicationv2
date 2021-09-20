@@ -8,6 +8,7 @@ using System.Windows;
 
 namespace WpfDesktopApplicationv2
 {
+    // asdf
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>

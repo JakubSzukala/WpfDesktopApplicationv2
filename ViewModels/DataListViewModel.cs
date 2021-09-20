@@ -21,7 +21,7 @@ namespace WpfDesktopApplicationv2.ViewModels
         }
 
 
-        private ObservableCollection<MeasurementViewModel> _measurementsListView;
+        private ObservableCollection<MeasurementViewModel> _measurementsListView; // unnecessary???
         public ObservableCollection<MeasurementViewModel> DataListMeasurements
         {
             get { return _measurementsListView; }
