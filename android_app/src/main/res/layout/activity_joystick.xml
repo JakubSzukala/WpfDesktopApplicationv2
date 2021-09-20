@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".JoystickActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+        <TextView
+            android:id="@+id/textViewErrorMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ERROR"
+            android:layout_gravity="center"
+            android:textColor="@android:color/holo_red_dark"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="Joystick"
+            android:textSize="20sp"
+            android:fontFamily="serif"
+            android:textColor="@color/blue"/>
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/dataGraph_joystick"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="15dp"
+
+            />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutButtons"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.1">
+
+            <Button
+                android:id="@+id/startBtn_joy"
+                android:backgroundTint="@color/blue"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:onClick="btns_onClick"
+                android:text="START"
+                android:textColor="@color/white"/>
+
+
+            <TextView
+                android:id="@+id/z_value"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="Z value:"
+                android:textSize="15sp"
+                android:textColor="@color/Black"/>
+
+            <Button
+                android:id="@+id/stopBtn_joy"
+                android:backgroundTint="@color/blue"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:onClick="btns_onClick"
+                android:text="STOP"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

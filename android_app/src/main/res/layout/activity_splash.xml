@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/blue"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Internet of Things"
+        android:textColor="@color/white"
+        android:layout_marginTop="20dp"
+        android:textSize="40sp"
+        android:layout_gravity="center"
+        android:fontFamily="cursive"> </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="MobHAT"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:layout_gravity="center"
+        android:fontFamily="serif"> </TextView>
+
+    <ImageView
+        android:id="@+id/splashscreen"
+        android:layout_width="344dp"
+        android:layout_height="380dp"
+        android:layout_gravity="center"
+        android:src="@drawable/splash" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        android:fontFamily="sans-serif-condensed"
+        android:text="         Ram Ellanki - 139783\n      Keshav Sharma - 142862\n Ewelina Robakowska - 140360\n     Pawel Rozenblut - 140361"
+        android:textColor="@color/white"
+        android:textSize="20sp"></TextView>
+
+</LinearLayout>

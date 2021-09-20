@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ConfigActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:text="SET IP ADDRESS"
+            android:textColor="@color/Black"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textViewIPConfig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:text=" IP "
+            android:textColor="@color/Black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/ipEditTextConfig"
+            android:layout_width="fill_parent"
+            android:layout_height="67dp"
+            android:layout_marginBottom="10dp"
+            android:ems="0"
+            android:importantForAutofill="no"
+            android:inputType="textUri"
+            android:gravity="center"
+            android:text="192.168.56.101"
+            android:textColor="@color/Black" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:text="SET CHART SETTINGS"
+            android:textColor="@color/Black"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/textViewSampleTimeConfig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="SAMPLING IN MS"
+            android:textColor="@color/Black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/sampleTimeEditTextConfig"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:ems="10"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:gravity="center"
+            android:text="500"
+            android:textColor="@color/Black"/>
+
+        <TextView
+            android:id="@+id/textViewDataLimitConfig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=" DATA LIMIT"
+            android:textColor="@color/Black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/DataLimitEditTextConfig"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:ems="10"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
+            android:gravity="center"
+            android:text="100"
+            android:textColor="@color/Black"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
