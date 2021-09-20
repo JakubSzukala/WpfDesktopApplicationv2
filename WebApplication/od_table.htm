@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- HTML file head: web page metadata -->
+    <head>
+        <title>Orientation data table</title>
+        <!-- jQuery -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        
+        <script type="text/javascript" src="scripts/od_table.js"></script>
+        <link rel="stylesheet" type="text/css" href="styles/rpi.css">
+    </head>
+
+	<!-- HTML file body: web page content -->
+	<body class="shadow-lg">
+        
+        <div class="border border-black p-1 rounded">
+            <button type="button" class="btn btn-black" onclick="startTimer()">Start</button>
+            <button type="button" class="btn btn-black" onclick="stopTimer()">Stop</button>
+            <span class="menuitem">Sample Time: 
+                <span><input id="sampleTime" type="text" class="inputfield" maxlength="4" size="3"></span> ms
+            </span>
+        </div>
+
+		<div>
+		<table class="table table-black">
+			<thead>
+                <tr>
+                  <th>Accelerometer</th>
+                  <th>Magnetometer</th>
+                  <th>Gyroscope</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span class="radiointable">Unit: 
+                            <span class="form-check-inline">
+                                <input type="radio" class="form-check-input" name ="Aunit" value="deg" checked>Degrees
+                            </span>
+                            <span class="form-check-inline">
+                                <input type="radio" class="form-check-input" name ="Aunit" value="rad">Radians
+                            </span>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="radiointable">
+                            Unit: &microT
+                        </span>
+                    </td>
+                    <td>
+                        <span class="radiointable">Unit: 
+                            <span class="form-check-inline">
+                                <input type="radio" class="form-check-input" name ="Gunit" value="deg" checked>Degrees
+                            </span>
+                            <span class="form-check-inline">
+                                <input type="radio" class="form-check-input" name ="Gunit" value="rad">Radians
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="table table-striped table-black">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="AXName">Roll</td>
+                                    <td id="AXValue">0</td>
+                                </tr>
+                                <tr>
+                                    <td id="AYName">Pitch</td>
+                                    <td id="AYValue">0</td>
+                                </tr>
+                                <tr>
+                                    <td id="AZName">Yaw</td>
+                                    <td id="AZValue">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table table-striped table-black">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="MXName">X</td>
+                                    <td id="MXValue">0</td>
+                                </tr>
+                                <tr>
+                                    <td id="MYName">Y</td>
+                                    <td id="MYValue">0</td>
+                                </tr>
+                                <tr>
+                                    <td id="MZName">Z</td>
+                                    <td id="MZValue">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table table-striped table-black">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="GXName">X</td>
+                                    <td id="GXValue">0</td>
+                                </tr>
+                                <tr>
+                                    <td id="GYName">Y</td>
+                                    <td id="GYValue">0</td>
+                                </tr>
+                                <tr>
+                                    <td id="GZName">Z</td>
+                                    <td id="GZValue">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+		</table>
+		</div>
+	</body>

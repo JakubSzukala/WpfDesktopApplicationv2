@@ -1,0 +1,2 @@
+chmod a+x ledmatrix_via_deamon.php
+chmod a+x sensors_via_deamon.php

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- HTML file head: web page metadata -->
+    <head>
+        <title>Environmental data table</title>
+        <!-- jQuery -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+        
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+        
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+        
+        <script type="text/javascript" src="scripts/ed_table.js"></script>
+        <link rel="stylesheet" type="text/css" href="styles/rpi.css">
+    </head>
+
+	<!-- HTML file body: web page content -->
+	<body>
+
+
+        <div class="border border-black p-1 rounded">
+            <button type="button" class="btn btn-black" onclick="startTimer()">Start</button>
+            <button type="button" class="btn btn-black" onclick="stopTimer()">Stop</button>
+            <span class="menuitem">Sample time: 
+                <span><input type="text" class="inputfield" maxlength="4" size="3" id="sampleTime"></span> ms
+            </span>
+        </div>
+
+		<div>
+		<table class="table table-striped table-black">
+			<thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Value</th>
+                  <th>Unit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td>Temperature from humidity sensor</td>
+                    <td id="tempFromHumValue">0</td>
+                    <td>
+                        <div  class="menuitem">Unit: 
+                        <div class="form-check-inline">
+                            <input type="radio" class="form-check-input" name="tempFromHumUnit" value="C" id="tempFromHumUnit" checked>&degC
+                        </div>
+                        <div class="form-check-inline">
+                            <input type="radio" class="form-check-input" name="tempFromHumUnit" value="K">K
+                        </div>
+                        <div class="form-check-inline">
+                            <input type="radio" class="form-check-input" name="tempFromHumUnit" value="F">&degF
+                        </div>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Temperature from pressure sensor</td>
+                    <td id="tempFromPresValue">0</td>
+                    <td>
+                        <div  class="menuitem" style="background-color:#000000">Unit: 
+                        <div class="form-check-inline">
+                            <input type="radio" class="form-check-input" name="tempFromPressUnit" value="C" checked>&degC
+                        </div>
+                        <div class="form-check-inline">
+                            <input type="radio" class="form-check-input" name="tempFromPressUnit" value="K">K
+                        </div>
+                        <div class="form-check-inline">
+                            <input type="radio" class="form-check-input" name="tempFromPressUnit" value="F">&degF
+                        </div>
+                    </div></td>
+                </tr>
+                <tr>
+                  <td>Pressure</td>
+                  <td id="presValue">0</td>
+                  <td><div  class="menuitem">Unit: 
+                    <div class="form-check-inline">
+                        <input type="radio" class="form-check-input" name="presUnit" value="hPa" checked>hPa
+                    </div>
+                    <div class="form-check-inline">
+                        <input type="radio" class="form-check-input" name="presUnit" value="mmHg">mmHg
+                    </div>
+                    <div class="form-check-inline">
+                        <input type="radio" class="form-check-input" name="presUnit" value="Bar">Bar
+                    </div>
+                </div></td>
+                </tr>
+                <tr>
+                  <td>Humidity</td>
+                  <td id="humValue">0</td>
+                  <td><div  class="menuitem" style="background-color:#000000">Unit: 
+                    <div class="form-check-inline">
+                        <input type="radio" class="form-check-input checked" name="humUnit" value="P" checked>%
+                    </div>
+                    <div class="form-check-inline">
+                        <input type="radio" class="form-check-input" name="humUnit" value="F">Fraction
+                    </div>
+                </div></td>
+                </tr>
+              </tbody>
+		</table>
+		</div>
+	</body>
